@@ -1,4 +1,4 @@
-name: Angular-IIS-CICD
+name: Deploy-Angular-IIS-Azure
 
 on:
   push:
