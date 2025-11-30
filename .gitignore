@@ -12,7 +12,7 @@ yarn-debug.log*
 /.angular/cache/
 
 # Environment files (often contain secrets or API keys)
-src/environments/*.ts
+#src/environments/*.ts
 
 # Compiled JavaScript and sourcemaps
 *.js
