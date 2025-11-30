@@ -44,12 +44,25 @@ jobs:
 
       - name: Build Angular App
         run: |
-          if [ "${{ github.event_name }}" = "push" ]; then
-            npx ng build --configuration=local
-          elif [ "${{ github.event_name }}" = "pull_request" ] && [ "${{ github.base_ref }}" = "development" ]; then
-            npx ng build --configuration=development
-          else
-            npx ng build --configuration=production
+          # Determine build configuration based on GitHub event
+          case "${{ github.event_name }}" in
+            push)
+              CONFIG=local
+              ;;
+            pull_request)
+              if [ "${{ github.base_ref }}" = "development" ]; then
+                CONFIG=development
+              else
+                CONFIG=production
+              fi
+              ;;
+            *)
+              CONFIG=production
+              ;;
+          esac
+
+          echo "Building Angular App with configuration: $CONFIG"
+          npx ng build --configuration=$CONFIG
         working-directory: ${{ env.PROJECT_PATH }}
 
       - name: Upload Build Artifact
@@ -137,7 +150,7 @@ jobs:
   #       with:
   #         name: ${{ env.ARTIFACT_NAME }}-${{ github.sha }}
   #         path: deploy_target
-
+  #
   #     - name: Deploy to Production
   #       shell: powershell
   #       run: |
